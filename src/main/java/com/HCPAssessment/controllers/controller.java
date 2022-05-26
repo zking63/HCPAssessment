@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,13 +25,20 @@ import org.springframework.web.client.RestTemplate;
 
 import com.HCPAssessment.models.user;
 import com.HCPAssessment.models.userlist;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class controller {
-
+	@RequestMapping(value = "/hello1", method = RequestMethod.GET, produces="application/json")
+	public String hellod() throws IOException {
+		
+		return "hello";
+	}
 	
-	@GetMapping("/hello")
+	@PostMapping(value = "/hello",  produces="application/json")
 	public List<String> helloWorld() throws IOException {
+		System.out.println("333");
 	/*	RestTemplate restTemplete = new RestTemplate();
 		List<user> users = new ArrayList<>();
 		users = restTemplete.getForEntity("https://jsonplaceholder.typicode.com/todos", user.class);
@@ -38,7 +46,7 @@ public class controller {
 		System.out.println("user: ");
 		return user;*/
 		RestTemplate restTemplate = new RestTemplate();
-
+		
 
 		ResponseEntity<user> u = restTemplate.getForEntity("https://jsonplaceholder.typicode.com/todos/1", user.class);
 	
@@ -46,6 +54,10 @@ public class controller {
 		
 		List<String> list = new ArrayList<>();
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		
+		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 		for (Integer i = 1; i < 2; i++) {
 		String	uri = "https://jsonplaceholder.typicode.com/todos/";
 			String id = i.toString();
@@ -64,14 +76,12 @@ public class controller {
 			
 			
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+
 
 		ResponseEntity<user> result = restTemplate.exchange(uri, HttpMethod.GET, entity, user.class);
 
-		System.out.println("headers:" + headers.size());
-		System.out.println("entity:" + entity.toString());
+		//System.out.println("headers:" + headers.size());
+		//System.out.println("entity:" + entity.toString());
 		System.out.println("Printing GET Response in POJO");
 		System.out.println("###########################################");
 		users.add(result);
@@ -96,24 +106,65 @@ public class controller {
 				  ResponseEntity.class);*/
 		System.out.println("list: " + list);
 		return list;
+		/*String l = list.toString();
+		entity = new HttpEntity<String>(l, headers);
+		System.out.println("entity: " + entity.getClass());
+		return restTemplate.exchange(
+		         "http://localhost:8080/hello", HttpMethod.POST, entity, String.class).getBody();*/
+	
 	}
 	
 	@GetMapping("/hello2")
-	public String hello() throws IOException {
-		String uri = "http://localhost:8080/hello";
+	public List<String> hello() throws IOException {
+		String uri = "https://jsonplaceholder.typicode.com/users";
 		RestTemplate restTemplate = new RestTemplate();
-		String result = restTemplate.getForObject(uri, String.class);
-		return result;
+		user result = null;
+		List<String> list = new ArrayList<>();
+		for (Integer i = 1; i < 11; i++) {
+			uri = "https://jsonplaceholder.typicode.com/users/";
+			uri = uri + i;
+			result = restTemplate.getForObject(uri, user.class);
+			String u = result.toString();
+			list.add(u);
+		}
+		return list;
+
+	
+	//String result = restTemplate.getForObject(uri, String.class);
+	/*	user result = restTemplate.getForObject(uri, user.class);
+		
+		
+	   
+		user t = null;
+	    
+
+	    	 try {
+	    		// ObjectMapper mapper = new ObjectMapper();
+	    	   // mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+	    	    result = restTemplate.getForObject(uri, user.class);
+			//	t =mapper.readValue(result, user.class);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+	    	 
+	        return result.toString();*/
+	    
+		
+	
 	}
-	   @RequestMapping(value = "/hello2", method = RequestMethod.POST, produces="application/json")
+	  /* @RequestMapping(value = "/hello", method = RequestMethod.POST, produces="application/json")
 	   public String createProducts(@RequestBody user user) {
 		   RestTemplate restTemplate = new RestTemplate();
 	      HttpHeaders headers = new HttpHeaders();
-	      headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	      headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+	      System.out.println("headers: " + headers.getContentType());
+
 	      HttpEntity<user> entity = new HttpEntity<user>(user, headers);
+	      System.out.println("entity: " + entity.getHeaders());
 
 	      return restTemplate.exchange(
-	         "https://dev.app.homecarepulse.com/Primary/?FlowId=7423bd80-cddb-11ea-9160-326dddd3e106&Action=api", HttpMethod.POST, entity, String.class).getBody();
-	   }
+	         "http://localhost:8080/hello", HttpMethod.POST, entity, String.class).getBody();
+	   }*/
 
 }

@@ -1,0 +1,13 @@
+package com.HCPAssessment;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HcpAssessmentApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(HcpAssessmentApplication.class, args);
+	}
+
+}

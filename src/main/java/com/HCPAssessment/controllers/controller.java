@@ -29,7 +29,7 @@ import com.HCPAssessment.models.userlist;
 public class controller {
 
 	
-	@GetMapping("https://dev.app.homecarepulse.com/Primary/?FlowId=7423bd80-cddb-11ea-9160-326dddd3e106&Action=api")
+	@GetMapping("/hello")
 	public List<String> helloWorld() throws IOException {
 	/*	RestTemplate restTemplete = new RestTemplate();
 		List<user> users = new ArrayList<>();
@@ -100,7 +100,7 @@ public class controller {
 	
 	@GetMapping("/hello2")
 	public String hello() throws IOException {
-		String uri = "https://dev.app.homecarepulse.com/Primary/?FlowId=7423bd80-cddb-11ea-9160-326dddd3e106&Action=api";
+		String uri = "http://localhost:8080/hello";
 		RestTemplate restTemplate = new RestTemplate();
 		String result = restTemplate.getForObject(uri, String.class);
 		return result;
